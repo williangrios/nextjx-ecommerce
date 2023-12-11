@@ -24,6 +24,10 @@ function CategoriesList() {
     }
   }
 
+  useEffect(() => {
+    getCategories()
+  }, [])
+
   const onDelete = async (id: string) => {
     try {
       setLoadingForDelete(true)
@@ -32,15 +36,11 @@ function CategoriesList() {
       setSelectedCategory(null)
       getCategories()
     } catch (error: any) {
-      message.error(error.response.data.message || error.message)      
-    } finally{
+      message.error(error.response.data.message || error.message)
+    } finally {
       setLoadingForDelete(false)
     }
   }
-
-  useEffect(() => {
-    getCategories()
-  }, [])
 
   const columns = [
     {
@@ -69,7 +69,7 @@ function CategoriesList() {
           <Button type='default' className='btn-small' onClick={() => {
             setSelectedCategory(params)
             onDelete(params.id)
-            }} loading={loadingForDelete}>Delete</Button>
+          }} loading={loadingForDelete}>Delete</Button>
           <Button type='primary' className='btn-small' onClick={
             () => {
               setShowCategoryForm(true)

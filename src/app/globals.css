@@ -17,7 +17,7 @@ button {
     border: 1px solidt #000000;
 }
 
-input {
+input, select {
     width: 100%;
     height: 40px;
     padding: 0 10px;
@@ -42,6 +42,12 @@ textarea{
 
 table{
     border: 1px solid #757575;
+    border-radius: 0 !important;
+}
+
+thead th{
+    border-bottom: 1px solid #757575;
+    font-weight: bold;
 }
 
 .btn-small{
