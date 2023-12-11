@@ -2,20 +2,39 @@
 import { NextRequest, NextResponse } from "next/server"
 import { connectDB } from "@/configs/dbConfig"
 import { validateJWT } from "@/helpers/validateJWT"
-import Category from "@/models/categoryModel"
+import Product from '@/models/productModel'
 connectDB()
+
+
+
+export async function GET(request: NextRequest, {params}: {
+    params: {
+        productid: string
+    }
+}) {
+    try {
+        const product = await Product.findById(params.productid)
+        return NextResponse.json(product)
+    } catch (error: any) {
+        return NextResponse.json({
+            message: error.message
+        }, {
+            status: 500
+        })
+    }
+}
 
 export async function PUT(request: NextRequest, {params}: {
     params: {
-        categoryid: string
+        productid: string
     }
 }) {
     try {
         await validateJWT(request)
         const reqBody = await request.json()
-        await Category.findByIdAndUpdate(params.categoryid, reqBody)
+        await Product.findByIdAndUpdate(params.productid, reqBody)
         return NextResponse.json({
-            message: 'Category updated successfully'
+            message: 'Product updated successfully'
         }, {
             status: 200
         })
@@ -28,12 +47,12 @@ export async function PUT(request: NextRequest, {params}: {
     }
 }
 
-export async function DELETE(request: NextRequest ,{params}: {params: {categoryid: string}}) {
+export async function DELETE(request: NextRequest ,{params}: {params: {productid: string}}) {
     try {
         await validateJWT(request)
-        await Category.findByIdAndDelete(params.categoryid)
+        await Product.findByIdAndDelete(params.productid)
         return NextResponse.json({
-            message: 'Category deleted successfully'
+            message: 'Product deleted successfully'
         } ,{
             status: 200
         })

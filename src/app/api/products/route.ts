@@ -1,25 +1,25 @@
 import { NextRequest, NextResponse } from "next/server"
 import { connectDB } from "@/configs/dbConfig"
-import Category from "@/models/categoryModel"
 import { validateJWT } from "@/helpers/validateJWT"
+import Product from "@/models/productModel"
 connectDB()
 
 export async function POST(request: NextRequest){
     try {
-        // check if category already exists
+        // check if Product already exists
         const userId = await validateJWT(request)
         const reqBody = await request.json()
-        const categoryExists = await Category.findOne({
+        const produdctExists = await Product.findOne({
             name: reqBody.name
         })
-        if (categoryExists){
-            throw new Error ('Category already exists')
+        if (produdctExists){
+            throw new Error ('Product already exists')
         }
         reqBody.createdBy = userId
-        const category = new Category(reqBody)
-        await category.save()
+        const product = new Product(reqBody)
+        await product.save()
         return NextResponse.json({
-            message: 'Category created successfully'
+            message: 'Product created successfully'
         })
         return
     } catch (error: any) {
@@ -34,9 +34,9 @@ export async function POST(request: NextRequest){
 export async function GET(request: NextRequest){
     try {
         await validateJWT(request)
-        const categoryList = await Category.find().populate('createdBy', 'name').sort({createdAt: -1})
+        const productList = await Product.find().populate('createdBy', 'name').sort({createdAt: -1})
         return NextResponse.json({
-            data: categoryList
+            data: productList
         })
     } catch (error: any) {
         return NextResponse.json({
