@@ -34,7 +34,17 @@ export async function POST(request: NextRequest){
 export async function GET(request: NextRequest){
     try {
         await validateJWT(request)
-        const productList = await Product.find().populate('createdBy', 'name').sort({createdAt: -1})
+        const filters: any =  {}
+        const searchParams = request.nextUrl.searchParams
+        const category = searchParams.get('category')
+        const search = searchParams.get('search')
+        if (category ){
+            filters['category'] = category
+        }
+        if (search ){
+            filters['name'] = { $regex: search, $options: 'i'}
+        }
+        const productList = await Product.find(filters).populate('createdBy', 'name').sort({createdAt: -1})
         return NextResponse.json({
             data: productList
         })

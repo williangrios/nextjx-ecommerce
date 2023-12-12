@@ -1,8 +1,21 @@
 import { connectDB } from "@/configs/dbConfig"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import User from '@/models/userModel'
+import { validateJWT } from "@/helpers/validateJWT"
 
-export async function GET() {
-    connectDB()
+
+connectDB()
+export async function GET(request: NextRequest) {
+    try {
+        await validateJWT(request)
+        const users = await User.find().select('-password')
+    } catch (error: any) {
+        return NextResponse.json({
+            message: error.message
+        }, {
+            status: 500
+        })
+    } 
     return NextResponse.json ({
         success: true,
         
